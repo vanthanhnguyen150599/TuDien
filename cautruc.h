@@ -293,9 +293,9 @@ void showVD(lienKetTu *word)
 	for (int i = 0; i < 5; i++)
 	{
 		if (word->tu.viDu[i] == NULL) break;
-		gotoxy(2,wherey()+2);
+		gotoxy(3,wherey()+2);
 		cout << "Vi du " << i+1 << ": ";
-		gotoxy(4,wherey()+1);
+		gotoxy(2,wherey()+1);
 		VD = *(word->tu.viDu[i]);
 		temp = "";
 		x = "";
@@ -313,9 +313,10 @@ void showVD(lienKetTu *word)
 			}
 			else
 			{
-				cout << temp;
+				cout  << temp;
 				temp = "";
 				temp = x;
+				x = "";
 				gotoxy(4,wherey()+1);
 			}
 		}
@@ -361,6 +362,27 @@ void showWord(lienKetTu *word)
 	gotoxy(0,31);
 	system("pause");
 	system("cls");
+}
+// ========================== XOA TU ===================================
+void deleteWord(lienKetTu *word, DSTu &ds)
+{
+	if (word->pre == NULL) // xoa dau
+	{
+		int vitri = hashtable(word->tu.word);
+		ds.danhSachTu[vitri] = ds.danhSachTu[vitri]->next;
+		ds.danhSachTu[vitri]->pre = NULL;
+		delete word;
+		return;
+	}
+	if (word->next == NULL) // xoa cuoi
+	{
+		word->pre->next = NULL;
+		delete word;
+		return;
+	}
+	word->pre->next = word->next;
+	word->next->pre = word->pre;
+	delete word;
 }
 // ===================== XU LY ================================
 void xuLy(DSTu &ds)
@@ -415,7 +437,7 @@ void xuLy(DSTu &ds)
 			}
 			else // cur = 0
 			{
-				if (preWord(mang[cur],ds) != NULL) //&& search.empty())
+				if (preWord(mang[cur],ds) != NULL && search.empty())
 				{
 					changeColor(15);
 					for (int i = 25; i > 0; i--)
@@ -431,6 +453,28 @@ void xuLy(DSTu &ds)
 					gotoxy(1,3);
 					cout << mang[cur]->tu.word;
 					changeColor(15);
+				}
+				else
+				{
+					if (!search.empty())
+					{
+						if (isMatch(preWord(mang[cur],ds)->tu.word,search))
+						{
+							changeColor(15);
+							for (int i = 25; i > 0; i--)
+							{
+								mang[i] = mang[i-1];
+								gotoxy(1,i+3);
+								cout << mang[i]->tu.word << "         ";
+							}
+							mang[cur] = preWord(mang[cur],ds);
+							gotoxy(1,cur+3);
+							cout << "                ";
+							changeColor(192);
+							gotoxy(1,cur+3);
+							cout << mang[cur]->tu.word;
+						}
+					}
 				}
 			}
 		}
@@ -477,6 +521,25 @@ void xuLy(DSTu &ds)
 							gotoxy(1,cur+3);
 							cout << mang[cur]->tu.word;
 							cur++;
+							changeColor(192);
+							gotoxy(1,cur+3);
+							cout << mang[cur]->tu.word;
+						}
+					}
+					else
+					{
+						if (isMatch(nextWord(mang[cur],ds)->tu.word,search))
+						{
+							changeColor(15);
+							for (int i = 0; i < 25; i++)
+							{
+								mang[i] = mang[i+1];
+								gotoxy(1,i+3);
+								cout << mang[i]->tu.word << "         ";
+							}
+							mang[cur] = nextWord(mang[cur],ds);
+							gotoxy(1,cur+3);
+							cout << "                ";
 							changeColor(192);
 							gotoxy(1,cur+3);
 							cout << mang[cur]->tu.word;
@@ -623,6 +686,59 @@ void xuLy(DSTu &ds)
 				gotoxy(1,cur+3);
 				cout << mang[cur]->tu.word;
 				changeColor(15); 
+			}
+		}
+		if (c == 83 && !kytu) // DELETE
+		{
+			anConTro();
+			changeColor(15);
+			system("cls");
+			gotoxy(0,30);
+			cout << "Ban co muon xoa tu " << mang[cur]->tu.word << "? " << endl << "Nhan Y den XAC NHAN hoac nhan phim bat ky de thoat";
+			pressKey(c,kytu);
+			if (c == 121 && kytu)
+			{
+				deleteWord(mang[cur],ds);
+				changeColor(15);
+				system("cls");
+				// Khoi tao lai
+				veKhung(30,60);
+				cur = 0;
+				mang[0] = firstWord(ds);
+				changeColor(192);
+				gotoxy(1,3);
+				cout << mang[0]->tu.word;
+				changeColor(15);
+				for (int i = 1; i < 26; i++)
+				{
+					if (mang[i-1] == NULL)
+					{
+						mang[i] = NULL;
+						continue;
+					} 
+					mang[i] = nextWord(mang[i-1],ds);
+					gotoxy(1,i+3);
+					if (mang[i] != NULL) cout << mang[i]->tu.word;
+				}
+			}
+			else
+			{
+				anConTro();
+				changeColor(15);
+				system("cls");
+				veKhung(30,60);
+				for (int i = 0; i < 26; i++)
+				{
+					if (mang[i] == NULL) break;
+					gotoxy(1,i+3);
+					cout << mang[i]->tu.word;
+				}
+				gotoxy(1,cur+3);
+				changeColor(192);
+				cout << mang[cur]->tu.word;
+				changeColor(15);
+				gotoxy(1,1); // phuc hoi search box
+				cout << search;
 			}
 		}
 		gotoxy(search.length()+1,1);
