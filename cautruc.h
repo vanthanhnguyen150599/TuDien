@@ -46,7 +46,7 @@ struct DSTu
 // ======================= HAM BAM ==================================
 int hashtable(string tu)
 {
-	return tu[0] - 97;
+	return tu[0] - 97; // (int) 'a' = 97 (int)'z' = 122
 }
 // ========================= THEM NGHIA ===============================
 void themNghia(tuNgu &word, string nghia)
@@ -68,7 +68,7 @@ void themNghia(tuNgu &word, string nghia)
 	}
 }
 // =========================== LAY NGHIA ================================
-void layNghia(tuNgu &word, string nghia)
+void layNghia(tuNgu &word, string nghia)// 
 {
 	string temp;
 	for (int i = 0; i < nghia.length(); i++)
@@ -115,7 +115,7 @@ void layVD(tuNgu &word,string VD)
 // ============================ SO SANH TU ============================
 int soSanhTu(string a, string b) // tra ve 1 a sau b, tra ve 0 a = b, tra ve -1 a truoc b
 {
-	if (a.length() < b.length()) // do dai cua a < do dai cua b
+	if (a.length() < b.length()) // do dai cua a < do dai cua b // a = six, b = sixty
 	{
 		for (int i = 0; i < a.length(); i++)
 		{
@@ -125,7 +125,7 @@ int soSanhTu(string a, string b) // tra ve 1 a sau b, tra ve 0 a = b, tra ve -1 
 		}
 		return -1;
 	}
-	for (int i = 0; i < b.length(); i++) // do dai cua a <= do dai cua b
+	for (int i = 0; i < b.length(); i++) // do dai cua a >= do dai cua b
 	{
 		if (a[i] == b[i]) continue;
 		if (a[i] > b[i]) return 1;
@@ -137,7 +137,7 @@ int soSanhTu(string a, string b) // tra ve 1 a sau b, tra ve 0 a = b, tra ve -1 
 // ========================= THEM TU =================================
 bool themTu(DSTu &ds, tuNgu word)
 {
-	int vitri = hashtable(word.word);
+	int vitri = hashtable(word.word); // vi tri o ham bam
 	if (ds.danhSachTu[vitri] == NULL) // Them dau hash thu vitri+1
 	{
 		ds.danhSachTu[vitri] = new lienKetTu;
@@ -152,13 +152,14 @@ bool themTu(DSTu &ds, tuNgu word)
 		if (soSanhTu(p->tu.word,word.word) == 0) return 0; // Tu nay da ton tai
 		if (soSanhTu(p->tu.word,word.word) == 1) // Tim tu nam sau word
 		{
-			if (p->pre == NULL) // Them dau
+			if (p->pre == NULL) // Them dau p = head
 			{
 				lienKetTu *q = new lienKetTu;
 				q->next = ds.danhSachTu[vitri];
 				ds.danhSachTu[vitri]->pre = q;
 				q->pre = NULL;
 				q->tu = word;
+				ds.danhSachTu[vitri] = q;
 				return 1;
 			}
 			// Them giua
@@ -182,6 +183,15 @@ bool themTu(DSTu &ds, tuNgu word)
 			p->tu = word;
 			return 1;
 		}
+//		{
+//			lienKetTu *q = new lienKetTu;
+//			q->next = p->next;
+//			p->next = q;
+//			p->next->pre = p;
+//			q->next->pre = q;
+//			p->tu = word;
+//			return 1;
+//		}
 	}
 } 
 // ======================== DOC TU =====================================
@@ -197,7 +207,7 @@ bool docTu(DSTu &ds)
 	if (infile.fail()) return 0;
 	while (!infile.eof())
 	{
-		tuNgu temp;
+		tuNgu temp;// data cua tu
 		getline(infile,word,';');
 		getline(infile,tuLoai,';');
 		getline(infile,nghia,';');
@@ -223,6 +233,7 @@ bool docTu(DSTu &ds)
 // ======================== TU TIEP THEO ===========================
 lienKetTu *nextWord(lienKetTu *word,DSTu &ds)
 {
+//	lienKetTu *temp = word
 	int vitri = hashtable(word->tu.word);
 	while (1)
 	{
@@ -258,6 +269,7 @@ lienKetTu *preWord(lienKetTu *word, DSTu &ds)
 					vitri--;
 					return word;
 				}
+				vitri--;
 				continue;
 			}
 			return NULL;	
@@ -268,17 +280,17 @@ lienKetTu *preWord(lienKetTu *word, DSTu &ds)
 // ====================== TU DAU TIEN ========================
 lienKetTu *firstWord(DSTu &ds)
 {
-	for (int i = 0; i < 26; i++)
+	for (int i = 0; i < 26; i++) // tim hashtable
 	{
 		if (ds.danhSachTu[i] != NULL) return ds.danhSachTu[i];
 	}
 	return NULL;
 }
 // ==================== TIM KIEM TU ======================
-bool isMatch(string word, string search)
+bool isMatch(string word, string search) // search = six, word = sixty
 {
 	if (word.length() < search.length()) return 0;
-	for (int i = 0; i < search.length(); i++) // search <= word
+	for (int i = 0; i < search.length(); i++) // search <= word (lenght)
 	{
 		if (word[i] != search[i]) return 0;
 	}
@@ -359,9 +371,6 @@ void showWord(lienKetTu *word)
 		cout << *word->tu.viDu[i];
 	} */
 	showVD(word);
-	gotoxy(0,31);
-	system("pause");
-	system("cls");
 }
 // ========================== XOA TU ===================================
 void deleteWord(lienKetTu *word, DSTu &ds)
@@ -370,7 +379,7 @@ void deleteWord(lienKetTu *word, DSTu &ds)
 	{
 		int vitri = hashtable(word->tu.word);
 		ds.danhSachTu[vitri] = ds.danhSachTu[vitri]->next;
-		ds.danhSachTu[vitri]->pre = NULL;
+		if (ds.danhSachTu[vitri != NULL])ds.danhSachTu[vitri]->pre = NULL;
 		delete word;
 		return;
 	}
@@ -380,14 +389,146 @@ void deleteWord(lienKetTu *word, DSTu &ds)
 		delete word;
 		return;
 	}
+	
 	word->pre->next = word->next;
 	word->next->pre = word->pre;
 	delete word;
 }
+// ===================== NHAP THONG TIN TU ===================
+lienKetTu *nhapThongTinTu(DSTu &ds)
+{
+	changeColor(15);
+	system("cls");
+	veKhungShow(30,60);
+	lienKetTu *res = NULL;
+	char c;
+	bool kytu;
+	int cur = 0;
+	string tu;
+	string tuloai;
+	string nghia;
+	string *VD[5] = {NULL};
+	hienConTro();
+	gotoxy(2,5);
+	cout << "Nhap tu: "; // tu : 11,5
+	gotoxy(2,7);
+	cout << "Nhap tu loai: "; // 16,7
+	gotoxy(2,9);
+	cout << "Nhap nghia: "; // 14,9
+	gotoxy(26,26);
+	cout << "LUU TU";
+	for (int i = 0; i < 5; i++)
+	{
+		gotoxy(2,11+2*i);
+		cout << "Vi du " << i+1 << ": "; // 11,11 + 2*i
+	}
+	gotoxy(11,5);
+	pressKey(c,kytu);
+	while(c != 27)
+	{
+		if (c == 72 && !kytu) // UP
+		{
+			if (cur > 0)
+			{
+				cur--;
+				switch(cur)
+				{
+					case 0:
+						{
+							gotoxy(11+tu.length(),5);
+							break;
+						}
+					case 1:
+						{
+							gotoxy(16+tuloai.length(),7);
+							break;
+						}
+					case 2:
+						{
+							gotoxy(14+nghia.length(),9);
+							break;
+						}		
+				}
+				if (cur >= 3 && cur <= 7)
+				{
+					if (cur == 7)
+					{
+						anConTro();
+						gotoxy(26,26);
+						changeColor(15);
+						cout << "LUU TU";
+						hienConTro();
+					}
+					if (VD[cur-3] != NULL)
+					{
+						if (VD[cur-3]->length() < 46)
+						{
+							gotoxy(11+VD[cur-3]->length(),11+2*(cur-3));
+									
+						}
+						else
+						{
+							gotoxy(58,11+2*(cur-3));
+						}
+					}
+					else gotoxy(11,11+2*(cur-3));
+				}	
+			}
+		}
+		if (c == 80 && !kytu) // DOWN
+		{
+			if (cur < 8)
+			{
+				cur++;
+				switch(cur)
+				{
+					case 8:
+						{
+							gotoxy(26,26);
+							changeColor(192);
+							cout << "LUU TU";
+							anConTro();
+							break;
+						}
+					case 1:
+						{
+							gotoxy(16+tuloai.length(),7);
+							break;
+						}
+					case 2:
+						{
+							gotoxy(14+nghia.length(),9);
+							break;
+						}
+				} 
+				if (cur >= 3 && cur <= 7)
+				{
+					if (VD[cur-3] != NULL)
+					{
+						if (VD[cur-3]->length() < 46)
+						{
+							gotoxy(11+VD[cur-3]->length(),11+2*(cur-3));
+							break;
+						}
+						else
+						{
+							gotoxy(58,11+2*(cur-3));
+							break;
+						}
+					}
+					else gotoxy(11,11+2*(cur-3));
+				}
+			}
+		}
+		
+		pressKey(c,kytu);
+	}
+	return res;
+}
 // ===================== XU LY ================================
 void xuLy(DSTu &ds)
 {
-	fullscreen();
+//	fullscreen();
 	veKhung(30,60);
 	int cur = 0;
 	lienKetTu *mang[26] = {NULL};
@@ -408,11 +549,12 @@ void xuLy(DSTu &ds)
 			} 
 			mang[i] = nextWord(mang[i-1],ds);
 			gotoxy(1,i+3);
-			if (mang[i] != NULL) cout << mang[i]->tu.word;
+			if (mang[i] != NULL) 
+			{
+				cout << mang[i]->tu.word;
+			}
 		}
 	}
-	
-	
 	char c;
 	bool kytu;
 	string search;
@@ -420,7 +562,7 @@ void xuLy(DSTu &ds)
 	gotoxy(search.length()+1,1);
 	hienConTro();
 	pressKey(c,kytu);
-	while (c != 27)
+	while (c != 27) // Khong nhan Esc
 	{
 		if (c == 72 && !kytu) // Up
 		{
@@ -437,7 +579,7 @@ void xuLy(DSTu &ds)
 			}
 			else // cur = 0
 			{
-				if (preWord(mang[cur],ds) != NULL && search.empty())
+				if (preWord(mang[cur],ds) != NULL && search.empty()) //khong co search
 				{
 					changeColor(15);
 					for (int i = 25; i > 0; i--)
@@ -446,7 +588,7 @@ void xuLy(DSTu &ds)
 						gotoxy(1,i+3);
 						cout << mang[i]->tu.word << "          ";
 					}
-					mang[cur] = preWord(mang[cur],ds);
+					mang[cur] = preWord(mang[cur],ds); // cur = 0
 					gotoxy(1,cur+3);// clean
 					cout << "               ";
 					changeColor(192);
@@ -548,7 +690,7 @@ void xuLy(DSTu &ds)
 				}
 			}
 		}
-		if ((c >= 97 && c <= 123) && kytu) // a->z
+		if ((c >= 97 && c <= 122) && kytu) // a->z
 		{
 			changeColor(15);
 			gotoxy(1+search.length(),1);
@@ -572,7 +714,7 @@ void xuLy(DSTu &ds)
 						dem++;
 						continue;
 					}
-					if (check) break;
+					if (check) break;// 
 				}
 				for (int i = dem; i < 26; i++)
 				{
@@ -665,6 +807,9 @@ void xuLy(DSTu &ds)
 				changeColor(15);
 				system("cls");
 				showWord(mang[cur]);
+				gotoxy(0,31);
+				system("pause");
+				system("cls");
 				// Khoi tao lai mang
 				veKhung(30,60);
 				anConTro();
@@ -704,21 +849,29 @@ void xuLy(DSTu &ds)
 				// Khoi tao lai
 				veKhung(30,60);
 				cur = 0;
-				mang[0] = firstWord(ds);
-				changeColor(192);
-				gotoxy(1,3);
-				cout << mang[0]->tu.word;
-				changeColor(15);
-				for (int i = 1; i < 26; i++)
+				if (firstWord(ds) != NULL)
 				{
-					if (mang[i-1] == NULL)
+					mang[0] = firstWord(ds);
+					changeColor(192);
+					gotoxy(1,3);
+					cout << mang[0]->tu.word;
+					changeColor(15);
+					for (int i = 1; i < 26; i++)
 					{
-						mang[i] = NULL;
-						continue;
-					} 
-					mang[i] = nextWord(mang[i-1],ds);
-					gotoxy(1,i+3);
-					if (mang[i] != NULL) cout << mang[i]->tu.word;
+						if (mang[i-1] == NULL)
+						{
+							mang[i] = NULL;
+							continue;
+						} 
+						mang[i] = nextWord(mang[i-1],ds);
+						gotoxy(1,i+3);
+						if (mang[i] != NULL) cout << mang[i]->tu.word;
+					}
+				}
+				else
+				{
+					gotoxy(0,31);
+					cout << "Tu dien trong";
 				}
 			}
 			else
@@ -741,10 +894,16 @@ void xuLy(DSTu &ds)
 				cout << search;
 			}
 		}
+		if (c == 61 && !kytu) // F3
+		{
+			nhapThongTinTu(ds);
+			
+		}
 		gotoxy(search.length()+1,1);
 		hienConTro();
 		pressKey(c,kytu);
-	}
+	} 
+	
 }
 
 #endif
