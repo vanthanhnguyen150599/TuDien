@@ -394,6 +394,57 @@ void deleteWord(lienKetTu *word, DSTu &ds)
 	word->next->pre = word->pre;
 	delete word;
 }
+// ========================= NHAP VI DU ==================================
+string nhapVD(char &c, bool &kytu, string chuoi, int dong)
+{
+	while (!(c == 27 || (c == 72 || c == 80) && !kytu))
+	{
+		if ((c >= 'a' && c <= 'z' || c == 32 /* space*/ || c == 46  /* dau cham*/) && kytu)
+		{
+			if (chuoi[chuoi.length()-1] == ' ' && c == ' ')
+			{
+				pressKey(c,kytu);
+				continue;
+			}
+			if (chuoi.length() + 1 < 46)
+			{
+				cout << c;
+				chuoi += c;
+			}
+			else
+			{
+				chuoi += c;
+				gotoxy(11,dong);
+				for (int i = chuoi.length() - 46; i < chuoi.length(); i++) cout << chuoi[i];
+			}
+		}
+		if (c == 8) // backspasce
+		{
+			if (chuoi.length() - 1 < 46 && chuoi.length() > 0)
+			{
+				anConTro();
+				gotoxy(wherex()-1,wherey());
+				cout << " ";
+				gotoxy(wherex()-1,wherey());
+				hienConTro();
+				
+				chuoi.erase(chuoi.length()-1);
+			}
+			else
+			{
+				if (chuoi.length() != 0)
+				{
+					chuoi.erase(chuoi.length()-1);
+					
+					gotoxy(11,dong);
+					for (int i = chuoi.length() - 46; i < chuoi.length(); i++) cout << chuoi[i];
+				}
+			}
+		}
+		pressKey(c,kytu);
+	}
+	return chuoi;
+}
 // ===================== NHAP THONG TIN TU ===================
 lienKetTu *nhapThongTinTu(DSTu &ds)
 {
@@ -424,8 +475,10 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 	}
 	gotoxy(11,5);
 	pressKey(c,kytu);
+	bool check = 0;
 	while(c != 27)
 	{
+		check = 0;
 		if (c == 72 && !kytu) // UP
 		{
 			if (cur > 0)
@@ -468,7 +521,7 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 						}
 						else
 						{
-							gotoxy(58,11+2*(cur-3));
+							gotoxy(57,11+2*(cur-3));
 						}
 					}
 					else gotoxy(11,11+2*(cur-3));
@@ -512,7 +565,7 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 						}
 						else
 						{
-							gotoxy(58,11+2*(cur-3));
+							gotoxy(5,11+2*(cur-3));
 							break;
 						}
 					}
@@ -520,8 +573,58 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 				}
 			}
 		}
+		if ((c >= 'a' && c < 'z') && kytu)
+		{
+			switch (cur)
+			{
+				case 0: // tu
+					{
+						if (tu.length() < 10)
+						{
+							cout << c;
+							tu += c;
+						}
+						break;
+					}
+				case 1: // tu loai
+					{
+						if (tuloai.length() < 20)
+						{
+							cout << c;
+							tuloai += c;
+						}
+						break;
+					}
+				case 2: // nghia
+					{
+						if (nghia.length() < 40)
+						{
+							cout << c;
+							nghia += c;
+						}
+						break;
+					}
+			}
+			if (cur >= 3 && cur <= 7)
+			{
+				if (VD[cur-3] == NULL)VD[cur-3] = new string;
+				*VD[cur-3] = nhapVD(c,kytu,*VD[cur-3],11+2*(cur-3));
+				
+				check = 1;
+			}
+		}
+		if (c == 8 || c == 46 || c == 32)
+		{
+			if (cur >= 3 && cur <= 7)
+			{
+				if (VD[cur-3] == NULL)VD[cur-3] = new string;
+				*VD[cur-3] = nhapVD(c,kytu,*VD[cur-3],11+2*(cur-3));
+				check = 1;
+			}
+		} 
 		
-		pressKey(c,kytu);
+		// Enter
+		if (!check) pressKey(c,kytu);
 	}
 	return res;
 }
