@@ -413,9 +413,11 @@ string nhapVD(char &c, bool &kytu, string chuoi, int dong)
 			}
 			else
 			{
+				anConTro();
 				chuoi += c;
 				gotoxy(11,dong);
 				for (int i = chuoi.length() - 46; i < chuoi.length(); i++) cout << chuoi[i];
+				hienConTro();
 			}
 		}
 		if (c == 8) // backspasce
@@ -428,11 +430,11 @@ string nhapVD(char &c, bool &kytu, string chuoi, int dong)
 				gotoxy(wherex()-1,wherey());
 				hienConTro();
 				
-				chuoi.erase(chuoi.length()-1);
+				chuoi.erase(chuoi.length()-1); // xoa ky tu cuoi cung
 			}
 			else
 			{
-				if (chuoi.length() != 0)
+				if (chuoi.length() != 0) // lenght >=  46
 				{
 					chuoi.erase(chuoi.length()-1);
 					
@@ -446,12 +448,12 @@ string nhapVD(char &c, bool &kytu, string chuoi, int dong)
 	return chuoi;
 }
 // ===================== NHAP THONG TIN TU ===================
-lienKetTu *nhapThongTinTu(DSTu &ds)
+tuNgu *nhapThongTinTu(DSTu &ds)
 {
 	changeColor(15);
 	system("cls");
 	veKhungShow(30,60);
-	lienKetTu *res = NULL;
+	tuNgu *res = NULL;
 	char c;
 	bool kytu;
 	int cur = 0;
@@ -486,17 +488,17 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 				cur--;
 				switch(cur)
 				{
-					case 0:
+					case 0: // tu
 						{
 							gotoxy(11+tu.length(),5);
 							break;
 						}
-					case 1:
+					case 1: // tu loai
 						{
 							gotoxy(16+tuloai.length(),7);
 							break;
 						}
-					case 2:
+					case 2: // nghia
 						{
 							gotoxy(14+nghia.length(),9);
 							break;
@@ -535,7 +537,7 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 				cur++;
 				switch(cur)
 				{
-					case 8:
+					case 8: // Luu
 						{
 							gotoxy(26,26);
 							changeColor(192);
@@ -543,12 +545,12 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 							anConTro();
 							break;
 						}
-					case 1:
+					case 1: // tu loai
 						{
 							gotoxy(16+tuloai.length(),7);
 							break;
 						}
-					case 2:
+					case 2: // nghia
 						{
 							gotoxy(14+nghia.length(),9);
 							break;
@@ -613,7 +615,7 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 				check = 1;
 			}
 		}
-		if (c == 8 || c == 46 || c == 32)
+		if (c == 8 || c == 32) // backspace - dau cham - space
 		{
 			if (cur >= 3 && cur <= 7)
 			{
@@ -621,9 +623,253 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 				*VD[cur-3] = nhapVD(c,kytu,*VD[cur-3],11+2*(cur-3));
 				check = 1;
 			}
-		} 
-		
-		// Enter
+			else if (cur < 3)
+			{
+				if (c == 8) // backspace
+				{
+					switch (cur)
+					{
+						case 0:
+							{
+								if (tu.length() > 0)
+								{
+									anConTro();
+									gotoxy(wherex()-1,wherey());
+									cout << " ";
+									gotoxy(wherex()-1,wherey());
+									hienConTro();
+									
+									tu.erase(tu.length()-1);
+								}
+								break;
+							}
+						case 1:
+							{
+								if (tuloai.length() > 0)
+								{
+									anConTro();
+									gotoxy(wherex()-1,wherey());
+									cout << " ";
+									gotoxy(wherex()-1,wherey());
+									hienConTro();
+									
+									tuloai.erase(tuloai.length() - 1);
+								}
+								break;
+							}
+						case 2:
+							{
+								if (nghia.length() > 0)
+								{
+									anConTro();
+									gotoxy(wherex()-1,wherey());
+									cout << " ";
+									gotoxy(wherex()-1,wherey());
+									hienConTro();
+									
+									nghia.erase(nghia.length()-1);
+								}
+								break;
+							}
+					}
+				}
+				if (c == 32) // space
+				{
+					switch (cur)
+					{
+						case 1: // tu loai
+							{
+								if (tuloai.length() < 20 && tuloai[tuloai.length()-1] != ' ')
+								{
+									cout << c;
+									tuloai += c;
+								} 
+								break;
+							}
+						case 2: // nghia
+							{
+								if (nghia.length() < 40)
+								{
+									if (nghia[nghia.length()-1] != ',' && nghia[nghia.length()-1] != ' ')
+									{
+										cout << c;
+										nghia += c;
+									}
+								}
+								break;
+							}
+					}
+				}
+			}
+		}
+		if (c == 44 && cur == 2) //dau phay
+		{
+			if (nghia.length() < 40)
+			{
+				if (nghia[nghia.length()-1] != ',' && nghia[nghia.length()-1] != ' ')
+				{
+					cout << c;
+					nghia += c;
+				}
+			}
+		}
+		if (c == 13 && cur == 8) // Enter 
+		{
+			//check tu
+			changeColor(15);
+			if (tu.length() == 0)
+			{
+				anConTro();
+				gotoxy(0,35);
+				cout << "Khong de trong tu!";
+				Sleep(1500);
+				gotoxy(0,35);
+				cout << "                  ";
+				gotoxy(26,26);
+				cout << "LUU TU";
+				gotoxy(11,5);
+				hienConTro();
+				cur = 0;
+				
+				pressKey(c,kytu);
+				continue;
+			}
+			else
+			{
+				int vitri = hashtable(tu);
+				lienKetTu *p = NULL;
+				for (p = ds.danhSachTu[vitri]; p != NULL; p = p->next)
+				{
+					if (soSanhTu(tu,p->tu.word) == 0) break;
+				}
+				if (p != NULL)
+				{
+					anConTro();
+					gotoxy(0,35);
+					cout << "Tu nay da ton tai vui long kiem tra lai!";
+					Sleep(1500);
+					gotoxy(0,35);
+					cout << "                                        ";
+					gotoxy(26,26);
+					cout << "LUU TU";
+					gotoxy(11 + tu.length(),5);
+					hienConTro();
+					cur = 0;
+					
+					pressKey(c,kytu);
+					continue;
+				}
+			}
+			if (tuloai.length() == 0) // check tu loai
+			{
+				
+				anConTro();
+				gotoxy(0,35);
+				cout << "Khong de trong tu loai!";
+				Sleep(1500);
+				gotoxy(0,35);
+				cout << "                       ";
+				gotoxy(26,26);
+				cout << "LUU TU";
+				gotoxy(16,7);
+				hienConTro();
+				cur = 1;
+				
+				pressKey(c,kytu);
+				continue;
+			}
+			if (nghia.length() == 0) // check nghia
+			{
+				
+				anConTro();
+				gotoxy(0,35);
+				cout << "Khong de trong nghia!";
+				Sleep(1500);
+				gotoxy(0,35);
+				cout << "                     ";
+				gotoxy(26,26);
+				cout << "LUU TU";
+				gotoxy(14,9);
+				hienConTro();
+				cur = 2;
+				
+				pressKey(c,kytu);
+				continue;
+			}
+			else // check VD
+			{
+				int i;
+				for (int i = 0; i< 5; i++) // xoa nhung VD rong
+				{
+					if (VD[i] != NULL )
+					{
+						if (VD[i]->length() == 0)
+						{
+							delete VD[i];
+							VD[i] = NULL;
+						}
+						else
+						{
+							chuanHoaChuoi(*VD[i]);
+							if (VD[i]->length() == 0)
+							{
+								delete VD[i];
+								VD[i] = NULL;
+							}
+						}
+					}
+				}
+				for (i = 0; i < 5; i++) 
+				{
+					if (VD[i] != NULL && VD[i]->length() != 0) break;
+				}
+				if (i == 5)
+				{
+					
+					anConTro();
+					gotoxy(0,35);
+					cout << "Phai co it nhat 1 VD!";
+					Sleep(1500);
+					gotoxy(0,35);
+					cout << "                      ";
+					gotoxy(26,26);
+					cout << "LUU TU";
+					gotoxy(11,11);
+					hienConTro();
+					cur = 3;
+					
+					pressKey(c,kytu);
+					continue;
+				}
+				else // LUU
+				{
+					res = new tuNgu;
+					res->word = tu;
+					chuanHoaChuoi(tuloai);
+					res->tuLoai = tuloai;
+					chuanHoaChuoi(nghia);
+					layNghia(*res,nghia);
+					for (int i = 0; i < 5; i++) // day VD
+					{
+						if (VD[i] != NULL) continue;
+						for (int j = i+1; j < 5; j++)
+						{
+							if (VD[j] != NULL)
+							{
+								VD[i] = VD[j];
+								VD[j] = NULL;
+								break;
+							}
+						}
+					}
+					for (int i = 0; i < 5; i++) // sao chep VD 
+					{
+						res->viDu[i] = VD[i];
+					}
+					return res;				
+				}
+			}
+		}
 		if (!check) pressKey(c,kytu);
 	}
 	return res;
@@ -631,12 +877,12 @@ lienKetTu *nhapThongTinTu(DSTu &ds)
 // ===================== XU LY ================================
 void xuLy(DSTu &ds)
 {
-//	fullscreen();
+	fullscreen();
 	veKhung(30,60);
 	int cur = 0;
 	lienKetTu *mang[26] = {NULL};
 	if (firstWord(ds) == NULL) cout << "Chua co tu nao trong tu dien";
-	else // Khoi tao mang
+	else // Khoi tao ang
 	{
 		mang[0] = firstWord(ds);
 		changeColor(192);
@@ -863,7 +1109,7 @@ void xuLy(DSTu &ds)
 						} 
 						mang[i] = nextWord(mang[i-1],ds);
 						gotoxy(1,i+3);
-						if (mang[i] != NULL) cout << mang[i]->tu.word << "       ";
+						if (mang[i] != NULL) cout << mang[i]->tu.word << "                 ";
 					}
 				}
 				else // cap nhat list
@@ -880,7 +1126,7 @@ void xuLy(DSTu &ds)
 							mang[dem] = p;
 							changeColor(15);
 							gotoxy(1,dem+3);
-							cout << mang[dem]->tu.word << "        ";
+							cout << mang[dem]->tu.word << "                 ";
 							dem++;
 							continue;
 						}
@@ -952,6 +1198,7 @@ void xuLy(DSTu &ds)
 				// Khoi tao lai
 				veKhung(30,60);
 				cur = 0;
+				search = "";
 				if (firstWord(ds) != NULL)
 				{
 					mang[0] = firstWord(ds);
@@ -999,14 +1246,46 @@ void xuLy(DSTu &ds)
 		}
 		if (c == 61 && !kytu) // F3
 		{
-			nhapThongTinTu(ds);
+			anConTro();
+			tuNgu *p = nhapThongTinTu(ds);
+			if (p != NULL) themTu(ds,*p);
+			// khoi tao lai
+			changeColor(15);
+			anConTro();
+			system("cls");
+			veKhung(30,60);
+			cur = 0;
+			if (firstWord(ds) != NULL)
+			{
+				mang[0] = firstWord(ds);
+				changeColor(192);
+				gotoxy(1,3);
+				cout << mang[0]->tu.word;
+				changeColor(15);
+				for (int i = 1; i < 26; i++)
+				{
+					if (mang[i-1] == NULL)
+					{
+						mang[i] = NULL;
+						continue;
+					} 
+					mang[i] = nextWord(mang[i-1],ds);
+					gotoxy(1,i+3);
+					if (mang[i] != NULL) cout << mang[i]->tu.word;
+				}
+			}
+			else
+			{
+				gotoxy(0,31);
+				cout << "Tu dien trong";
+			}
 			
 		}
 		gotoxy(search.length()+1,1);
 		hienConTro();
 		pressKey(c,kytu);
 	} 
-	
+	gotoxy(0,30);
 }
 
 #endif
