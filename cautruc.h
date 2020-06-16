@@ -1287,5 +1287,51 @@ void xuLy(DSTu &ds)
 	} 
 	gotoxy(0,30);
 }
-
+// ============================== TU CUOI CUNG TU DIEN =========================
+bool isLastWord(DSTu &ds,lienKetTu *p)
+{
+	int vitri = hashtable(p->tu.word);
+	for (int i = 25; i >= 0; i--) 
+	{
+		if (ds.danhSachTu[i] != NULL) 
+		{
+			if (vitri != i) return 0;
+			lienKetTu *q;
+			for (q = ds.danhSachTu[i]; q->next != NULL; q = q->next);
+			if (q == p) return 1;
+			return 0;
+		}
+	}
+}
+// =========================== LUU FILE ================================
+void luuFile(DSTu &ds)
+{
+	ofstream outfile;
+	outfile.open("input.txt",ios_base::out);
+	lienKetTu *p;
+	for (int i = 0; i < 26; i++)
+	{
+		for (p = ds.danhSachTu[i]; p != NULL; p = p->next)
+		{
+			outfile << p->tu.word << ";";
+			outfile << p->tu.tuLoai << ";";
+			nghiaTu *q = p->tu.nghia.First;
+			outfile << q->nghia;
+			for (q = p->tu.nghia.First->next; q!= NULL ;q = q->next )
+			{
+				outfile << "," << q->nghia;
+			}
+			outfile << ";";
+			outfile << *p->tu.viDu[0];
+			for (int j = 1; j < 5; j++)
+			{
+				if (p->tu.viDu[j] == NULL) break;
+				outfile << "," << *p->tu.viDu[j];
+			}
+			outfile << ";";
+			if (!isLastWord(ds,p)) outfile << endl;
+		}
+	}
+	delete p;
+}
 #endif
