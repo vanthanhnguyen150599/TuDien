@@ -68,7 +68,7 @@ void themNghia(tuNgu &word, string nghia)
 	}
 }
 // =========================== LAY NGHIA ================================
-void layNghia(tuNgu &word, string nghia)// 
+void layNghia(tuNgu &word, string nghia)
 {
 	string temp;
 	for (int i = 0; i < nghia.length(); i++)
@@ -120,7 +120,7 @@ int soSanhTu(string a, string b) // tra ve 1 a sau b, tra ve 0 a = b, tra ve -1 
 		for (int i = 0; i < a.length(); i++)
 		{
 			if (a[i] == b[i]) continue;
-			if (a[i] > b[i]) return 1;
+			if (a[i] > b[i]) return 1; 
 			return -1;
 		}
 		return -1;
@@ -183,15 +183,6 @@ bool themTu(DSTu &ds, tuNgu word)
 			p->tu = word;
 			return 1;
 		}
-//		{
-//			lienKetTu *q = new lienKetTu;
-//			q->next = p->next;
-//			p->next = q;
-//			p->next->pre = p;
-//			q->next->pre = q;
-//			p->tu = word;
-//			return 1;
-//		}
 	}
 } 
 // ======================== DOC TU =====================================
@@ -221,19 +212,13 @@ bool docTu(DSTu &ds)
 			layVD(temp,VD);
 			themTu(ds,temp);
 		}
-//		cout << word << " ";
-//		cout << temp.nghia.First->nghia << endl;
-//		cout << *(temp.viDu[0]) << endl;
 	}
-//	for (int i = 0; i < 26; i++)
-//	for (lienKetTu *p = ds.danhSachTu[0]; p != NULL; p = p->next) cout << p->tu.word << endl;
 	
 	return 1;
 }
 // ======================== TU TIEP THEO ===========================
 lienKetTu *nextWord(lienKetTu *word,DSTu &ds)
 {
-//	lienKetTu *temp = word
 	int vitri = hashtable(word->tu.word);
 	while (1)
 	{
@@ -362,14 +347,6 @@ void showWord(lienKetTu *word)
 	{
 		cout << ", " << p->nghia;
 	}
-//	gotoxy(2,11);
-/*	cout << "Vi du: ";
-	for (int i = 0; i < 5; i++)
-	{
-		if (word->tu.viDu[i] == NULL) break;
-		gotoxy(2,12+i);
-		cout << *word->tu.viDu[i];
-	} */
 	showVD(word);
 }
 // ========================== XOA TU ===================================
