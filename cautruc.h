@@ -540,12 +540,10 @@ tuNgu *nhapThongTinTu(DSTu &ds)
 						if (VD[cur-3]->length() < 46)
 						{
 							gotoxy(11+VD[cur-3]->length(),11+2*(cur-3));
-							break;
 						}
 						else
 						{
 							gotoxy(5,11+2*(cur-3));
-							break;
 						}
 					}
 					else gotoxy(11,11+2*(cur-3));
