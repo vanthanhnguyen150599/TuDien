@@ -75,4 +75,10 @@ void pressKey(char &c,bool &kytu)
 	}
 	else kytu = 1;
 }
+// ========================= CHUAN HOA CHUOI ==============================
+void chuanHoaChuoi(string &a)
+{
+	if (a[0] == ' ') a.erase(0,1); 
+	if (a[a.length()-1] == ' ' || a[a.length()-1] == ',') a.erase(a.length()-1);
+}
 #endif
