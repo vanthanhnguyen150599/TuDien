@@ -857,7 +857,7 @@ void xuLy(DSTu &ds)
 	int cur = 0;
 	lienKetTu *mang[26] = {NULL};
 	if (firstWord(ds) == NULL) cout << "Chua co tu nao trong tu dien";
-	else // Khoi tao ang
+	else // Khoi tao mang
 	{
 		mang[0] = firstWord(ds);
 		changeColor(192);
@@ -1271,9 +1271,7 @@ bool isLastWord(DSTu &ds,lienKetTu *p)
 		if (ds.danhSachTu[i] != NULL) 
 		{
 			if (vitri != i) return 0;
-			lienKetTu *q;
-			for (q = ds.danhSachTu[i]; q->next != NULL; q = q->next);
-			if (q == p) return 1;
+			if (p->next == NULL) return 1;
 			return 0;
 		}
 	}
@@ -1292,7 +1290,7 @@ void luuFile(DSTu &ds)
 			outfile << p->tu.tuLoai << ";";
 			nghiaTu *q = p->tu.nghia.First;
 			outfile << q->nghia;
-			for (q = p->tu.nghia.First->next; q!= NULL ;q = q->next )
+			for (q = p->tu.nghia.First->next; q != NULL ;q = q->next )
 			{
 				outfile << "," << q->nghia;
 			}
