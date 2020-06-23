@@ -8,5 +8,5 @@ int main()
 	DSTu ds;
 	if (!docTu(ds)) cout << "Doc file that bai";
 	xuLy(ds);
-//	cout << isMatch("abroad","abr");
+	luuFile(ds);
 }
